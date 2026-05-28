@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase, Symptom } from '@/lib/supabase';
 import { calculateCertaintyFactor } from '@/lib/certaintyFactor';
-import { ChevronRight, Loader } from 'lucide-react';
+import { ChevronRight, Loader, Heart, Shield } from 'lucide-react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 
@@ -126,10 +126,12 @@ export default function DiagnosisPage() {
     return (
       <>
         <Navigation />
-        <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 pt-20 flex items-center justify-center">
           <div className="text-center">
-            <Loader className="w-12 h-12 text-red-900 animate-spin mx-auto mb-4" />
-            <p className="text-gray-600">Memuat kuesioner...</p>
+            <div className="w-16 h-16 rounded-2xl bg-primary-100 flex items-center justify-center mx-auto mb-4">
+              <Loader className="w-8 h-8 text-primary-600 animate-spin" />
+            </div>
+            <p className="text-neutral-600 font-medium">Memuat kuesioner...</p>
           </div>
         </div>
         <Footer />
@@ -140,30 +142,33 @@ export default function DiagnosisPage() {
   return (
     <>
       <Navigation />
-      <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 pt-20 pb-12">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
           {step === 'semester' && (
-            <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                Mulai Diagnosis
-              </h1>
-              <p className="text-gray-600 mb-8">
-                Pilih semester Anda untuk melanjutkan kuesioner diagnosis mental health.
+            <div className="bg-white rounded-2xl shadow-lg p-10 mt-8 border border-neutral-200 animate-fade-in">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-12 h-12 bg-gradient-to-br from-primary-100 to-primary-50 rounded-xl flex items-center justify-center">
+                  <Heart className="w-6 h-6 text-primary-600" />
+                </div>
+                <h1 className="text-3xl font-bold text-neutral-900">Mulai Diagnosis</h1>
+              </div>
+              <p className="text-neutral-600 mb-8 text-lg">
+                Pilih semester Anda untuk melanjutkan diagnosis kesehatan mental yang aman dan anonim.
               </p>
 
               <div className="mb-8">
-                <label className="block text-sm font-semibold text-gray-900 mb-4">
-                  Semester Anda:
+                <label className="block text-sm font-bold text-neutral-900 mb-4 uppercase tracking-wide">
+                  Semester Anda
                 </label>
                 <div className="grid grid-cols-4 gap-3">
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
                     <button
                       key={sem}
                       onClick={() => setSemester(sem)}
-                      className={`py-3 px-4 rounded-lg font-semibold transition-all ${
+                      className={`py-3 px-4 rounded-xl font-bold text-lg transition-all transform ${
                         semester === sem
-                          ? 'bg-red-900 text-white'
-                          : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                          ? 'bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg scale-105'
+                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 hover:scale-102'
                       }`}
                     >
                       {sem}
@@ -173,85 +178,91 @@ export default function DiagnosisPage() {
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-8">
-                <p className="text-blue-900 text-sm">
-                  <span className="font-semibold">Catatan Privasi:</span> Informasi
-                  semester Anda hanya digunakan untuk statistik agregat dan tidak
-                  akan diidentifikasi dengan pribadi Anda. Diagnosis Anda sepenuhnya
-                  anonim.
-                </p>
+              <div className="bg-gradient-to-r from-accent-50 to-accent-100 border-2 border-accent-300 rounded-xl p-5 mb-8">
+                <div className="flex gap-3">
+                  <Shield className="w-6 h-6 text-accent-700 flex-shrink-0 mt-0.5" />
+                  <div>
+                    <p className="font-bold text-accent-900 mb-1">Privasi Terjamin</p>
+                    <p className="text-accent-800 text-sm">
+                      Data Anda 100% anonim. Hanya semester yang disimpan untuk statistik agregat, tanpa identifikasi pribadi.
+                    </p>
+                  </div>
+                </div>
               </div>
 
               <button
                 onClick={handleStartQuestionnaire}
-                className="w-full py-3 bg-red-900 text-white rounded-lg font-semibold hover:bg-red-800 transition-colors flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
               >
                 Mulai Kuesioner
-                <ChevronRight className="w-5 h-5" />
+                <ChevronRight className="w-6 h-6" />
               </button>
             </div>
           )}
 
           {step === 'questionnaire' && (
-            <div className="bg-white rounded-xl shadow-lg p-8 mt-8">
-              <div className="mb-8">
-                <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                  Kuesioner Diagnosis
-                </h1>
-                <p className="text-gray-600">
-                  Jawab pertanyaan berikut dengan jujur. Semester: Tahun ke-{semester}
-                </p>
-                <div className="mt-4 bg-gray-100 h-2 rounded-full overflow-hidden">
-                  <div
-                    className="bg-red-900 h-full transition-all"
-                    style={{
-                      width: `${Math.round(
-                        (Object.keys(answers).length / symptoms.length) * 100
-                      )}%`,
-                    }}
-                  ></div>
+            <div className="bg-white rounded-2xl shadow-lg p-10 mt-8 border border-neutral-200 animate-fade-in">
+              <div className="mb-10">
+                <div className="flex items-center justify-between mb-4">
+                  <h1 className="text-3xl font-bold text-neutral-900">Kuesioner Diagnosis</h1>
+                  <span className="px-4 py-2 bg-primary-100 text-primary-700 rounded-full font-bold text-sm">
+                    Semester {semester}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-600 mt-2">
-                  {Object.keys(answers).length} dari {symptoms.length} pertanyaan
-                  terjawab
+                <p className="text-neutral-600 mb-6">
+                  Jawab semua pertanyaan dengan jujur dan sesuai dengan kondisi Anda saat ini.
                 </p>
+
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm font-semibold text-neutral-700">Progress</span>
+                    <span className="text-sm font-bold text-primary-600">
+                      {Object.keys(answers).length} / {symptoms.length}
+                    </span>
+                  </div>
+                  <div className="bg-neutral-200 h-3 rounded-full overflow-hidden">
+                    <div
+                      className="bg-gradient-to-r from-primary-500 to-primary-600 h-full transition-all duration-300"
+                      style={{
+                        width: `${Math.round(
+                          (Object.keys(answers).length / symptoms.length) * 100
+                        )}%`,
+                      }}
+                    ></div>
+                  </div>
+                </div>
               </div>
 
-              <div className="space-y-6 mb-8">
+              <div className="space-y-5 mb-10">
                 {symptoms.map((symptom, index) => (
                   <div
                     key={symptom.id}
-                    className="border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow"
+                    className="group bg-gradient-to-r from-neutral-50 to-white border-2 border-neutral-200 rounded-2xl p-6 hover:border-primary-300 hover:shadow-md transition-all"
                   >
-                    <div className="flex items-start justify-between mb-3">
-                      <h3 className="font-semibold text-gray-900 flex-1">
-                        <span className="text-red-900 font-bold mr-2">
-                          {index + 1}.
-                        </span>
-                        {symptom.statement}
-                      </h3>
+                    <div className="flex items-start gap-4 mb-4">
+                      <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-600 to-primary-700 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+                        {index + 1}
+                      </span>
+                      <p className="font-semibold text-neutral-900 text-lg flex-1">{symptom.statement}</p>
                     </div>
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => handleAnswerChange(symptom.id, true)}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          answers[symptom.id] === true
-                            ? 'bg-red-900 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        Ya
-                      </button>
-                      <button
-                        onClick={() => handleAnswerChange(symptom.id, false)}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          answers[symptom.id] === false
-                            ? 'bg-blue-900 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
-                      >
-                        Tidak
-                      </button>
+                    <div className="flex gap-3">
+                      {[true, false].map((value) => (
+                        <button
+                          key={value ? 'ya' : 'tidak'}
+                          onClick={() => handleAnswerChange(symptom.id, value)}
+                          className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all transform ${
+                            answers[symptom.id] === value
+                              ? value
+                                ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-lg scale-105'
+                                : 'bg-gradient-to-r from-neutral-400 to-neutral-500 text-white shadow-lg scale-105'
+                              : value
+                              ? 'bg-accent-100 text-accent-700 hover:bg-accent-200'
+                              : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                          }`}
+                        >
+                          {value ? '✓ Ya' : '✗ Tidak'}
+                        </button>
+                      ))}
                     </div>
                   </div>
                 ))}
@@ -260,24 +271,24 @@ export default function DiagnosisPage() {
               <button
                 onClick={handleSubmit}
                 disabled={!allAnswered || submitting}
-                className="w-full py-3 bg-red-900 text-white rounded-lg font-semibold hover:bg-red-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center gap-2"
               >
                 {submitting ? (
                   <>
                     <Loader className="w-5 h-5 animate-spin" />
-                    Memproses...
+                    <span>Memproses Diagnosis...</span>
                   </>
                 ) : (
                   <>
-                    Lihat Hasil
-                    <ChevronRight className="w-5 h-5" />
+                    <span>Lihat Hasil Saya</span>
+                    <ChevronRight className="w-6 h-6" />
                   </>
                 )}
               </button>
 
               {!allAnswered && (
-                <p className="text-center text-gray-600 mt-4 text-sm">
-                  Silakan jawab semua pertanyaan untuk melanjutkan
+                <p className="text-center text-neutral-600 mt-6 text-sm bg-neutral-100 py-3 rounded-lg">
+                  Jawab semua 12 pertanyaan untuk melanjutkan
                 </p>
               )}
             </div>
