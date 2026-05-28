@@ -13,11 +13,12 @@ Platform berbasis web untuk diagnosis kesehatan mental mahasiswa menggunakan met
 
 ## Teknologi Stack
 
-- **Frontend**: React 18 + TypeScript + Tailwind CSS
+- **Frontend**: Next.js 15 + React 18 + TypeScript + Tailwind CSS
 - **Database**: Supabase (PostgreSQL)
 - **UI Components**: Lucide React Icons
-- **Build Tool**: Vite
+- **Build Tool**: Next.js (Built-in)
 - **PDF Export**: html2pdf.js (CDN)
+- **Routing**: Next.js App Router
 
 ## Setup & Instalasi
 
@@ -37,9 +38,11 @@ npm install
 Buat file `.env.local` dengan template `.env.example`:
 
 ```env
-VITE_SUPABASE_URL=https://your-project.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here
+NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 ```
+
+**Note**: Gunakan prefix `NEXT_PUBLIC_` agar environment variables dapat diakses di browser.
 
 ### 4. Database Setup
 Database dan migrasi sudah otomatis diterapkan. Tabel yang dibuat:
@@ -53,7 +56,7 @@ Database dan migrasi sudah otomatis diterapkan. Tabel yang dibuat:
 npm run dev
 ```
 
-Aplikasi akan tersedia di `http://localhost:5173`
+Aplikasi akan tersedia di `http://localhost:3000`
 
 ## Arsitektur Sistem
 
@@ -142,24 +145,35 @@ CREATE TABLE diagnosis_answers (
 - Semua diagnosis sepenuhnya anonim
 - GDPR compliant
 
-## API & Komponen
+## Struktur Project
 
-### Core Components
+### Next.js App Router
 ```
-src/
-├── components/
-│   └── Navigation.tsx
-├── pages/
-│   ├── Home.tsx
-│   ├── About.tsx
-│   ├── Information.tsx
-│   ├── Diagnosis.tsx
-│   ├── Results.tsx
-│   └── Admin.tsx
-├── lib/
-│   ├── supabase.ts (Client setup)
-│   └── certaintyFactor.ts (CF logic)
-└── App.tsx (Main container)
+app/
+├── layout.tsx               # Root layout
+├── globals.css             # Global styles
+├── page.tsx                # Home page
+├── about/
+│   └── page.tsx
+├── diagnosis/
+│   └── page.tsx
+├── informasi/
+│   └── page.tsx
+├── results/
+│   └── page.tsx
+└── admin/
+    └── page.tsx
+
+components/
+├── Navigation.tsx          # Header navigation
+└── Footer.tsx             # Footer
+
+lib/
+├── supabase.ts            # Supabase client & types
+└── certaintyFactor.ts     # CF calculation logic
+
+public/
+└── pakar.png             # Expert image
 ```
 
 ### Key Functions
@@ -208,33 +222,57 @@ Menggunakan html2pdf.js dari CDN untuk mengeksport hasil diagnosis ke PDF dengan
 - Timestamp
 - Disclaimer
 
-## Testing
+## Build & Production
 
 ```bash
-# Type checking
-npm run typecheck
+# Development server
+npm run dev
+
+# Build untuk production
+npm run build
+
+# Start production server
+npm start
 
 # Linting
 npm run lint
-
-# Build production
-npm run build
-
-# Preview production build
-npm run preview
 ```
+
+Build akan menghasilkan folder `.next/` dengan optimized static pages dan server functions.
 
 ## Deployment
 
-### Supabase
-1. Setup Supabase project
-2. Run migrations otomatis
-3. Set environment variables
+### Vercel (Recommended untuk Next.js)
+1. Push ke GitHub repository
+2. Connect ke Vercel: https://vercel.com
+3. Vercel otomatis deploy saat ada push ke main branch
+4. Set environment variables di Vercel Dashboard:
+   - NEXT_PUBLIC_SUPABASE_URL
+   - NEXT_PUBLIC_SUPABASE_ANON_KEY
 
-### Vercel/Netlify
+### Self-Hosted
 ```bash
 npm run build
-# Deploy dist/ folder
+npm start
+```
+
+Server akan running di port 3000 (configurable via PORT env var).
+
+### Docker
+```dockerfile
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
 ```
 
 ## Support & Resources

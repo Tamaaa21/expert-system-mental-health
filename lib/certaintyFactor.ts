@@ -13,10 +13,9 @@ export function calculateCertaintyFactor(
   );
 
   const totalCF = cfValues.reduce((sum, cf) => sum + cf, 0);
-  const maxPossibleCF = answers.length * 1; // Each symptom weight is max 1
+  const maxPossibleCF = answers.length * 1;
   const normalizedCF = answers.length > 0 ? totalCF / maxPossibleCF : 0;
 
-  // Weighted scoring based on severity levels
   const emotionalSymptoms = answers
     .slice(0, 3)
     .filter((a) => a.userAnswer).length;
