@@ -8,52 +8,67 @@ export type CFResult = {
 export function calculateCertaintyFactor(
   answers: { expertWeight: number; userAnswer: boolean }[]
 ): CFResult {
-  const cfValues = answers.map((item) =>
-    item.userAnswer ? item.expertWeight : 0
-  );
 
-  const totalCF = cfValues.reduce((sum, cf) => sum + cf, 0);
-  const maxPossibleCF = answers.length * 1;
-  const normalizedCF = answers.length > 0 ? totalCF / maxPossibleCF : 0;
+  const selectedCF = answers
+    .filter((item) => item.userAnswer)
+    .map((item) => item.expertWeight);
+
+  let combinedCF = 0;
+
+  if (selectedCF.length > 0) {
+    combinedCF = selectedCF[0];
+
+    for (let i = 1; i < selectedCF.length; i++) {
+      combinedCF =
+        combinedCF +
+        selectedCF[i] * (1 - combinedCF);
+    }
+  }
 
   const emotionalSymptoms = answers
     .slice(0, 3)
     .filter((a) => a.userAnswer).length;
+
   const physicalSymptoms = answers
     .slice(1, 9)
     .filter((a) => a.userAnswer).length;
+
   const cognitiveSymptoms = answers
     .slice(8, 12)
     .filter((a) => a.userAnswer).length;
 
+  const emotionalWeight = emotionalSymptoms * 1;
+  const physicalWeight = physicalSymptoms * 2;
+  const cognitiveWeight = cognitiveSymptoms * 3;
+
+  const totalWeight =
+    emotionalWeight +
+    physicalWeight +
+    cognitiveWeight;
+
   let severityLevel: 'Ringan' | 'Sedang' | 'Berat';
   let severityScore: number;
 
-  const cognitiveWeight = cognitiveSymptoms * 3;
-  const physicalWeight = physicalSymptoms * 2;
-  const emotionalWeight = emotionalSymptoms * 1;
-
-  const totalWeight = cognitiveWeight + physicalWeight + emotionalWeight;
-
   if (totalWeight >= 20) {
     severityLevel = 'Berat';
-    severityScore = Math.min(100, Math.round((totalWeight / 30) * 100));
   } else if (totalWeight >= 10) {
     severityLevel = 'Sedang';
-    severityScore = Math.min(100, Math.round((totalWeight / 30) * 100));
   } else {
     severityLevel = 'Ringan';
-    severityScore = Math.min(100, Math.round((totalWeight / 30) * 100));
   }
 
+  severityScore = Math.min(
+    100,
+    Math.round((totalWeight / 30) * 100)
+  );
+
   return {
-    totalCF: Math.round(normalizedCF * 10000) / 10000,
+    totalCF: combinedCF,
     severityLevel,
     severityScore,
-    confidence: Math.round(normalizedCF * 100),
+    confidence: Math.round(combinedCF * 100),
   };
 }
-
 export function getSeverityDescription(level: string): {
   title: string;
   description: string;
@@ -72,10 +87,11 @@ export function getSeverityDescription(level: string): {
         'Praktikkan teknik relaksasi atau mindfulness',
       ],
     },
+
     Sedang: {
       title: 'Depresi Sedang (Moderate Depression)',
       description:
-        'Anda menunjukkan gejala-gejala depresi yang mulai mengganggu fungsi sosial dan akademik. Disarankan untuk segera mencari bantuan profesional.',
+        'Anda menunjukkan gejala-gejala depresi yangc mulai mengganggu fungsi sosial dan akademik. Disarankan untuk segera mencari bantuan profesional.',
       recommendations: [
         'Segera konsultasi dengan psikolog atau psikiater',
         'Kurangi beban akademik jika memungkinkan',
@@ -84,6 +100,7 @@ export function getSeverityDescription(level: string): {
         'Hindari penggunaan alkohol atau zat terlarang',
       ],
     },
+
     Berat: {
       title: 'Depresi Berat (Severe Depression)',
       description:
@@ -99,6 +116,7 @@ export function getSeverityDescription(level: string): {
   };
 
   return (
-    descriptions[level as keyof typeof descriptions] || descriptions['Ringan']
+    descriptions[level as keyof typeof descriptions] ||
+    descriptions.Ringan
   );
 }
