@@ -56,8 +56,10 @@ export default function DiagnosisPage() {
       setSubmitting(true);
 
       const cfAnswers = symptoms.map((s) => ({
-        expertWeight: s.expert_weight,
+        symptomId: s.id,
+        code: s.code,
         userAnswer: answers[s.id] || false,
+        expertWeight: s.expert_weight,
       }));
 
       const result = calculateCertaintyFactor(cfAnswers);
@@ -150,20 +152,20 @@ export default function DiagnosisPage() {
                   Semester Anda
                 </label>
                 <div className="grid grid-cols-4 gap-3">
-                  {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
-                    <button
-                      key={sem}
-                      onClick={() => setSemester(sem)}
-                      className={`py-3 px-4 rounded-xl font-bold text-lg transition-all transform ${
-                        semester === sem
-                          ? 'bg-gradient-to-br from-primary-600 to-primary-700 text-white shadow-lg scale-105'
-                          : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 hover:scale-102'
-                      }`}
-                    >
-                      {sem}
-                      {sem === 8 ? '+' : ''}
-                    </button>
-                  ))}
+                 {[1, 2, 3, 4, 5, 6, 7, 8].map((sem) => (
+  <button
+    key={sem}
+    onClick={() => setSemester(sem)}
+    className={`py-3 px-4 rounded-xl font-bold text-lg transition-all duration-300 transform ${
+      semester === sem
+        ? 'bg-gradient-to-r from-[#800020] to-[#A52A2A] text-white shadow-lg scale-105 border-2 border-[#800020]'
+        : 'bg-white text-[#800020] border-2 border-[#800020]/20 hover:bg-[#800020]/10 hover:border-[#800020] hover:scale-105'
+    }`}
+  >
+    {sem}
+    {sem === 8 ? '+' : ''}
+  </button>
+))}
                 </div>
               </div>
 
@@ -181,8 +183,7 @@ export default function DiagnosisPage() {
 
               <button
                 onClick={handleStartQuestionnaire}
-                className="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95 flex items-center justify-center gap-2"
-              >
+className="w-full py-4 bg-gradient-to-r from-[#800020] to-[#A52A2A] text-white rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2"              >
                 Mulai Kuesioner
                 <ChevronRight className="w-6 h-6" />
               </button>
@@ -194,7 +195,7 @@ export default function DiagnosisPage() {
               <div className="mb-10">
                 <div className="flex items-center justify-between mb-4">
                   <h1 className="text-3xl font-bold text-neutral-900">Kuesioner Diagnosis</h1>
-                  <span className="px-4 py-2 bg-primary-100 text-primary-700 rounded-full font-bold text-sm">
+                  <span className="px-4 py-2 bg-[#800020]/10 text-[#800020] rounded-full font-bold text-sm border border-[#800020]/20">
                     Semester {semester}
                   </span>
                 </div>
@@ -203,16 +204,15 @@ export default function DiagnosisPage() {
                 </p>
 
                 <div className="space-y-2">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-semibold text-neutral-700">Progress</span>
-                    <span className="text-sm font-bold text-primary-600">
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="text-sm font-semibold text-neutral-900">Progress</span>
+                    <span className="text-sm font-bold text-neutral-900">
                       {Object.keys(answers).length} / {symptoms.length}
                     </span>
                   </div>
                   <div className="bg-neutral-200 h-3 rounded-full overflow-hidden">
                     <div
-                      className="bg-gradient-to-r from-primary-500 to-primary-600 h-full transition-all duration-300"
-                      style={{
+className="bg-gradient-to-r from-[#800020] to-[#B22222] h-full transition-all duration-300"                      style={{
                         width: `${Math.round(
                           (Object.keys(answers).length / symptoms.length) * 100
                         )}%`,
@@ -229,7 +229,7 @@ export default function DiagnosisPage() {
                     className="group bg-gradient-to-r from-neutral-50 to-white border-2 border-neutral-200 rounded-2xl p-6 hover:border-primary-300 hover:shadow-md transition-all"
                   >
                     <div className="flex items-start gap-4 mb-4">
-                      <span className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-600 to-primary-700 text-white flex items-center justify-center font-bold text-sm flex-shrink-0">
+                      <span >
                         {index + 1}
                       </span>
                       <p className="font-semibold text-neutral-900 text-lg flex-1">{symptom.statement}</p>
@@ -242,11 +242,11 @@ export default function DiagnosisPage() {
                           className={`flex-1 py-3 px-4 rounded-xl font-bold transition-all transform ${
                             answers[symptom.id] === value
                               ? value
-                                ? 'bg-gradient-to-r from-accent-500 to-accent-600 text-white shadow-lg scale-105'
-                                : 'bg-gradient-to-r from-neutral-400 to-neutral-500 text-white shadow-lg scale-105'
+                                ? 'bg-gradient-to-r from-[#800020] to-[#A52A2A] text-white shadow-lg scale-105'
+                                : 'bg-gradient-to-r from-neutral-700 to-neutral-800 text-white shadow-lg scale-105'
                               : value
-                              ? 'bg-accent-100 text-accent-700 hover:bg-accent-200'
-                              : 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200'
+                              ? 'bg-accent-50 text-accent-800 hover:bg-accent-100'
+                              : 'bg-neutral-50 text-neutral-900 hover:bg-neutral-100'
                           }`}
                         >
                           {value ? '✓ Ya' : '✗ Tidak'}
@@ -260,8 +260,7 @@ export default function DiagnosisPage() {
               <button
                 onClick={handleSubmit}
                 disabled={!allAnswered || submitting}
-                className="w-full py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-xl font-bold text-lg hover:shadow-xl hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center gap-2"
-              >
+className="w-full py-4 bg-gradient-to-r from-[#800020] to-[#A52A2A] text-white rounded-xl font-bold text-lg hover:shadow-xl hover:scale-105 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:scale-100 flex items-center justify-center gap-2"              >
                 {submitting ? (
                   <>
                     <Loader className="w-5 h-5 animate-spin" />
@@ -276,7 +275,7 @@ export default function DiagnosisPage() {
               </button>
 
               {!allAnswered && (
-                <p className="text-center text-neutral-600 mt-6 text-sm bg-neutral-100 py-3 rounded-lg">
+                <p className="text-center text-neutral-800 mt-6 text-sm bg-neutral-50 py-3 rounded-lg">
                   Jawab semua 12 pertanyaan untuk melanjutkan
                 </p>
               )}

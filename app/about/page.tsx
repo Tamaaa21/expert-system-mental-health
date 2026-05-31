@@ -59,7 +59,7 @@ export default function About() {
               <div>
                 <Building2 className="w-10 h-10 mb-4" />
                 <h2 className="text-xl font-bold mb-2">Visi</h2>
-                <p className="text-maroon-100 text-sm leading-relaxed">
+                <p className="text-gray-100 text-sm leading-relaxed">
                   Menjadi platform kesehatan mental terdepan yang memberdayakan
                   mahasiswa untuk mencapai kesejahteraan mental yang optimal.
                 </p>
@@ -67,7 +67,7 @@ export default function About() {
               <div>
                 <Target className="w-10 h-10 mb-4" />
                 <h2 className="text-xl font-bold mb-2">Misi</h2>
-                <p className="text-maroon-100 text-sm leading-relaxed">
+                <p className="text-gray-100 text-sm leading-relaxed">
                   Menyediakan diagnosis mental health yang akurat, anonim, dan mudah
                   diakses untuk semua mahasiswa UHN.
                 </p>
@@ -75,7 +75,7 @@ export default function About() {
               <div>
                 <Users className="w-10 h-10 mb-4" />
                 <h2 className="text-xl font-bold mb-2">Tujuan</h2>
-                <p className="text-maroon-100 text-sm leading-relaxed">
+                <p className="text-gray-100 text-sm leading-relaxed">
                   Membantu mahasiswa mengenali kondisi mental, mengelola stres, dan
                   mendapatkan rujukan bantuan profesional.
                 </p>
@@ -150,11 +150,11 @@ export default function About() {
           {/* Team Section */}
           <div className="bg-maroon-800 text-white rounded-3xl p-10 md:p-12 text-center shadow-lg">
             <h2 className="text-3xl font-bold mb-4">Tim Pengembang</h2>
-            <p className="text-maroon-100 max-w-2xl mx-auto mb-6">
+            <p className="text-gray-100 max-w-2xl mx-auto mb-6">
               Platform ini dikembangkan oleh tim profesional yang berdedikasi untuk
               meningkatkan kesehatan mental mahasiswa.
             </p>
-            <p className="text-maroon-200">
+            <p className="text-gray-200">
               Dukungan dari Departemen Kesehatan Mental & Bimbingan Konseling UHN
             </p>
           </div>
