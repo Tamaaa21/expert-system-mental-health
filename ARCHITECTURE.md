@@ -4,45 +4,45 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                   Next.js Frontend                           │
+│                   Next.js Frontend                          │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ Pages (6 routes)                                     │   │
-│  │ • Home (/): Landing dengan CTA                      │   │
-│  │ • About (/about): Info tentang platform             │   │
-│  │ • Informasi (/informasi): Edukasi kesehatan mental  │   │
-│  │ • Diagnosis (/diagnosis): Kuesioner 12 gejala       │   │
-│  │ • Results (/results): Hasil & PDF export            │   │
-│  │ • Admin (/admin): Dashboard statistik               │   │
+│  │ • Home (/): Landing dengan CTA                       │   │
+│  │ • About (/about): Info tentang platform              │   │
+│  │ • Informasi (/informasi): Edukasi kesehatan mental   │   │
+│  │ • Diagnosis (/diagnosis): Kuesioner 12 gejala        │   │
+│  │ • Results (/results): Hasil & PDF export             │   │
+│  │ • Admin (/admin): Dashboard statistik                │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                        ↓                                      │
+│                        ↓                                    │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ Shared Components                                    │   │
-│  │ • Navigation: Header dengan links & logo            │   │
-│  │ • Footer: Contact info & social                     │   │
+│  │ • Navigation: Header dengan links & logo             │   │
+│  │ • Footer: Contact info & social                      │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                        ↓                                      │
+│                        ↓                                    │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ Libraries                                            │   │
-│  │ • supabase.ts: Client initialization & types        │   │
+│  │ • supabase.ts: Client initialization & types         │   │
 │  │ • certaintyFactor.ts: CF calculation logic           │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
                         ↓ (HTTP)
 ┌─────────────────────────────────────────────────────────────┐
-│              Supabase Backend (PostgreSQL)                   │
+│              Supabase Backend (PostgreSQL)                  │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ Database Tables                                      │   │
-│  │ • symptoms: Master 12 gejala + bobot pakar          │   │
-│  │ • diagnoses: Hasil diagnosis (anonymous)            │   │
-│  │ • diagnosis_answers: Jawaban per gejala             │   │
-│  │ • statistics: Agregat data per semester             │   │
+│  │ • symptoms: Master 12 gejala + bobot pakar           │   │
+│  │ • diagnoses: Hasil diagnosis (anonymous)             │   │
+│  │ • diagnosis_answers: Jawaban per gejala              │   │
+│  │ • statistics: Agregat data per semester              │   │
 │  └──────────────────────────────────────────────────────┘   │
-│                        ↓                                      │
+│                        ↓                                    │
 │  ┌──────────────────────────────────────────────────────┐   │
 │  │ Row Level Security (RLS)                             │   │
-│  │ • Diagnoses: Append-only untuk anonimitas           │   │
-│  │ • Answers: Readable untuk statistics                │   │
-│  │ • Symptoms: Public read                             │   │
+│  │ • Diagnoses: Append-only untuk anonimitas            │   │
+│  │ • Answers: Readable untuk statistics                 │   │
+│  │ • Symptoms: Public read                              │   │
 │  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```

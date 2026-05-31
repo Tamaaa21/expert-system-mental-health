@@ -5,6 +5,7 @@ import { supabase } from '@/lib/supabase';
 import { BarChart3, Users, TrendingUp, Loader } from 'lucide-react';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { useRouter } from 'next/navigation';
 
 type StatisticsData = {
   semester: number;
@@ -27,16 +28,24 @@ type AdminStats = {
 };
 
 export default function AdminPage() {
+  const router = useRouter();
   const [stats, setStats] = useState<AdminStats>({
     totalDiagnoses: 0,
     semesterStats: [],
     severityDistribution: { Ringan: 0, Sedang: 0, Berat: 0 },
     loading: true,
   });
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
+    const isAuthed = localStorage.getItem('adminAuth') === 'true';
+    if (!isAuthed) {
+      router.replace('/admin/login');
+      return;
+    }
+    setAuthChecked(true);
     fetchStatistics();
-  }, []);
+  }, [router]);
 
   async function fetchStatistics() {
     try {
@@ -102,7 +111,7 @@ export default function AdminPage() {
     }
   }
 
-  if (stats.loading) {
+  if (!authChecked || stats.loading) {
     return (
       <>
         <Navigation />
@@ -122,13 +131,24 @@ export default function AdminPage() {
       <Navigation />
       <div className="min-h-screen bg-gray-50 pt-20 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8">
-            <h1 className="text-4xl font-bold text-gray-900">
-              Admin Dashboard
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Statistik agregat diagnosis kesehatan mental mahasiswa
-            </p>
+          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-gray-900">
+                Admin Dashboard
+              </h1>
+              <p className="text-gray-600 mt-2">
+                Statistik agregat diagnosis kesehatan mental mahasiswa
+              </p>
+            </div>
+            <button
+              onClick={() => {
+                localStorage.removeItem('adminAuth');
+                router.push('/admin/login');
+              }}
+              className="px-5 py-2 rounded-full border border-red-200 text-red-900 font-semibold hover:bg-red-50 transition-colors"
+            >
+              Keluar
+            </button>
           </div>
 
           {/* Summary Cards */}

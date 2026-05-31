@@ -55,14 +55,21 @@ export default function DiagnosisPage() {
     try {
       setSubmitting(true);
 
+      const cfAnswers = symptoms.map((s) => ({
+        expertWeight: s.expert_weight,
+        userAnswer: answers[s.id] || false,
+      }));
+
+      const result = calculateCertaintyFactor(cfAnswers);
+
       const { data: diagnosisData, error: diagnosisError } = await supabase
         .from('diagnoses')
         .insert([
           {
             semester,
-            total_cf: 0,
-            severity_level: 'Pending',
-            severity_score: 0,
+            total_cf: result.totalCF,
+            severity_level: result.severityLevel,
+            severity_score: result.severityScore,
           },
         ])
         .select()
@@ -82,24 +89,6 @@ export default function DiagnosisPage() {
         .insert(answerRecords);
 
       if (answersError) throw answersError;
-
-      // Calculate CF
-      const cfAnswers = symptoms.map((s) => ({
-        expertWeight: s.expert_weight,
-        userAnswer: answers[s.id] || false,
-      }));
-
-      const result = calculateCertaintyFactor(cfAnswers);
-
-      // Update diagnosis
-      await supabase
-        .from('diagnoses')
-        .update({
-          total_cf: result.totalCF,
-          severity_level: result.severityLevel,
-          severity_score: result.severityScore,
-        })
-        .eq('id', diagnosisData.id);
 
       // Store result in session/localStorage for results page
       localStorage.setItem(

@@ -1,6 +1,6 @@
 'use client';
 
-import { Heart } from 'lucide-react';
+import { Shield } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -10,43 +10,57 @@ export function Navigation() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-neutral-200 z-50 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 bg-white border-b-2 border-maroon-800 z-50 shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="flex items-center gap-3 cursor-pointer group">
-            <div className="w-10 h-10 bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl flex items-center justify-center shadow-md group-hover:shadow-lg transition-all group-hover:scale-105">
-              <Heart className="w-6 h-6 text-white" />
+          <Link href="/" className="flex items-center gap-3 cursor-pointer">
+            <div className="w-8 h-8 bg-maroon-800 rounded-full flex items-center justify-center">
+              <Shield className="w-5 h-5 text-white" />
             </div>
-            <div className="hidden sm:flex flex-col">
-              <span className="font-bold text-sm text-neutral-900">UHN</span>
-              <span className="text-xs text-neutral-500 font-medium">Mental Health</span>
-            </div>
+            <span className="font-bold text-maroon-800 hidden sm:inline text-sm">
+              UNIVERSITAS HARKAT NEGERI
+            </span>
           </Link>
 
-          <div className="flex items-center gap-1 sm:gap-1">
-            {[
-              { href: '/', label: 'Home' },
-              { href: '/about', label: 'About' },
-              { href: '/informasi', label: 'Informasi' },
-            ].map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`px-3 sm:px-4 py-2 text-sm font-medium rounded-lg transition-all ${
-                  isActive(item.href)
-                    ? 'text-primary-700 bg-primary-50'
-                    : 'text-neutral-600 hover:text-neutral-900 hover:bg-neutral-50'
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
+          <div className="flex items-center gap-2 sm:gap-8">
+            <div className="hidden sm:flex items-center space-x-4">
+            <Link
+              href="/"
+              className={`px-3 sm:px-4 py-2 text-sm font-semibold transition-colors ${
+                isActive('/')
+                  ? 'text-maroon-800 border-b-2 border-maroon-800'
+                  : 'text-gray-600 hover:text-maroon-800'
+              }`}
+            >
+              Home
+            </Link>
+            <Link
+              href="/about"
+              className={`px-3 sm:px-4 py-2 text-sm font-semibold transition-colors ${
+                isActive('/about')
+                  ? 'text-maroon-800 border-b-2 border-maroon-800'
+                  : 'text-gray-600 hover:text-maroon-800'
+              }`}
+            >
+              About
+            </Link>
+            <Link
+              href="/informasi"
+              className={`px-3 sm:px-4 py-2 text-sm font-semibold transition-colors ${
+                isActive('/informasi')
+                  ? 'text-maroon-800 border-b-2 border-maroon-800'
+                  : 'text-gray-600 hover:text-maroon-800'
+              }`}
+            >
+              Informasi
+            </Link>
+            </div>
 
             <Link
               href="/diagnosis"
-              className="ml-2 px-5 py-2.5 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-lg font-semibold text-sm hover:shadow-lg hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95"
+              className="ml-4 px-4 sm:px-6 py-2 bg-maroon-800 text-white rounded-lg font-semibold text-sm hover:bg-maroon-900 transition-colors shadow-md"
             >
-              Diagnosis
+              Mulai Diagnosis
             </Link>
           </div>
         </div>
