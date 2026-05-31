@@ -12,7 +12,7 @@ export default function Home() {
           {/* Hero Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-20">
             <div className="max-w-xl mx-auto md:mx-0">
-              <div className="inline-block bg-maroon-50 px-4 py-2 rounded-full mb-4">
+              <div className="inline-block bg-maroon-200 px-4 py-2 rounded-full mb-4">
                 <span className="text-maroon-800 font-semibold text-sm">
                   Kesehatan Mental, Masa Depan Cerah
                 </span>
@@ -37,12 +37,12 @@ export default function Home() {
             </div>
             <div className="relative">
               <img
-                src="https://images.pexels.com/photos/3807517/pexels-photo-3807517.jpeg?auto=compress&cs=tinysrgb&w=900"
+                src="/image1.png"
                 alt="Mental health support"
                 className="rounded-2xl shadow-2xl w-full h-auto object-cover"
               />
               <div className="absolute -bottom-4 -right-4 bg-maroon-800 text-white p-4 rounded-lg shadow-lg max-w-xs hidden md:block">
-                <p className="font-semibold text-sm md:text-lg">
+                <p className="font-semibold text-white md:text-lg">
                   "Kesehatan mental adalah fondasi untuk kehidupan yang bermakna."
                 </p>
               </div>
@@ -141,7 +141,7 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-4">
               Siap Memulai Perjalanan Kesehatan Mental Anda?
             </h2>
-            <p className="text-maroon-100 mb-8 max-w-2xl mx-auto">
+            <p className="text-gray-100 mb-8 max-w-2xl mx-auto">
               Diagnosis ini dirancang khusus untuk mahasiswa dengan dukungan dari pakar kesehatan mental. Data Anda aman dan akan membantu kami meningkatkan layanan.
             </p>
             <Link

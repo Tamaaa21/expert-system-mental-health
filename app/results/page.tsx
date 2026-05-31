@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Download, Home } from 'lucide-react';
-import { CFResult } from '@/lib/certaintyFactor';
 import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
+import { CFResult } from '@/types/diagnosis';
 
 export default function ResultsPage() {
   const router = useRouter();
@@ -71,7 +71,41 @@ export default function ResultsPage() {
     );
   }
 
-const cfPercent = (result.totalCF * 100).toFixed(2);
+  // Determine color scheme based on severity level
+  const colors = (() => {
+    if (result.severityLevel === 'Berat') {
+      return {
+        bg: 'bg-red-50',
+        border: 'border-red-300',
+        badge: 'bg-red-600 text-white',
+        progress: 'bg-red-100',
+        bar: 'bg-red-600',
+        text: 'text-red-700',
+        icon: 'text-red-600',
+      };
+    }
+    if (result.severityLevel === 'Sedang') {
+      return {
+        bg: 'bg-yellow-50',
+        border: 'border-yellow-300',
+        badge: 'bg-yellow-600 text-white',
+        progress: 'bg-yellow-100',
+        bar: 'bg-yellow-600',
+        text: 'text-yellow-700',
+        icon: 'text-yellow-600',
+      };
+    }
+    return {
+      bg: 'bg-green-50',
+      border: 'border-green-300',
+      badge: 'bg-green-600 text-white',
+      progress: 'bg-green-100',
+      bar: 'bg-green-600',
+      text: 'text-green-700',
+      icon: 'text-green-600',
+    };
+  })();
+
   return (
     <>
       <Navigation />
@@ -87,89 +121,59 @@ const cfPercent = (result.totalCF * 100).toFixed(2);
             </p>
           </div>
 
-          {/* Results Card */}
+          {/* Results Card - Enhanced with better visualization */}
           <div
             ref={resultRef}
-            className={`${colors.bg} border-2 ${colors.border} rounded-2xl p-8 mb-8 shadow-lg`}
+            className={`${colors.bg} border-2 ${colors.border} rounded-3xl p-10 mb-8 shadow-xl`}
+            role="region"
+            aria-label="Hasil Diagnosis Singkat"
           >
-            {/* Severity Badge */}
-            <div className="flex items-center justify-center mb-8">
-              <div className={`${colors.badge} px-6 py-2 rounded-full font-bold text-lg`}>
-                {description.title}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Left Column - Severity Level */}
+              <div className="flex flex-col justify-center items-center">
+                <div className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Tingkat Keparahan</div>
+                <div className={`inline-block px-8 py-4 rounded-full ${colors.badge} text-2xl font-bold shadow-lg`}>
+                  {result.severityLevel}
+                </div>
+                <div className="text-xs text-gray-600 mt-4 text-center max-w-xs">
+                  {result.severityLevel === 'Berat' && 'Diperlukan perhatian profesional segera'}
+                  {result.severityLevel === 'Sedang' && 'Disarankan konsultasi dengan profesional'}
+                  {result.severityLevel === 'Ringan' && 'Kondisi relatif stabil'}
+                </div>
+              </div>
+
+              {/* Right Column - Percentage & Progress */}
+              <div className="flex flex-col justify-center">
+                <div className="text-sm font-semibold text-gray-700 mb-3 uppercase tracking-wide">Persentase Keyakinan</div>
+                <div className="text-5xl font-extrabold text-neutral-900 mb-4">{result.severityScore}%</div>
+                
+                {/* Progress Bar */}
+                <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden shadow-sm">
+                  <div
+                    className={`h-full ${colors.bar} rounded-full transition-all duration-1000 ease-out`}
+                    style={{ width: `${result.severityScore}%` }}
+                  ></div>
+                </div>
+                <div className="flex justify-between text-xs text-gray-600 mt-2">
+                  <span>0%</span>
+                  <span>50%</span>
+                  <span>100%</span>
+                </div>
               </div>
             </div>
 
-            {/* Score Circle */}
-            <div className="flex justify-center mb-8">
-              <div
-                className={`w-32 h-32 rounded-full ${colors.progress} flex items-center justify-center shadow-lg`}
-              >
-                <div className="text-center">
-                  <div className={`text-4xl font-bold`}>
-                    {result.severityScore}
-                  </div>
-                  <div className="text-sm font-medium text-gray-600 mt-1">
-                    Tingkat Keparahan
-                  </div>
-                </div>
+            {/* Confidence Level */}
+            <div className="mt-8 pt-6 border-t border-gray-300 border-opacity-50">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-semibold text-gray-700">Tingkat Kepercayaan Diagnosis:</span>
+                <span className="text-lg font-bold text-neutral-900">{result.confidence}%</span>
               </div>
-            </div>
-
-            {/* Metrics */}
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <div className="bg-white rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-gray-900">
-                  {result.totalCF.toFixed(4)}
-                </div>
-                <div className="text-xs text-gray-600 mt-1">
-                  Certainty Factor
-                </div>
-              </div>
-              <div className="bg-white rounded-lg p-4 text-center">
-                <div className="text-2xl font-bold text-gray-900">
-                  {result.confidence}%
-                </div>
-                <div className="text-xs text-gray-600 mt-1">Kepercayaan</div>
-              </div>
-            </div>
-
-            {/* Progress Bar */}
-            <div className="mb-8">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm font-semibold text-gray-900">
-                  Tingkat Keparahan
-                </span>
-                <span className="text-sm text-gray-600">{result.severityScore}%</span>
-              </div>
-              <div className={`h-3 rounded-full ${colors.progress} overflow-hidden`}>
+              <div className="w-full bg-gray-200 rounded-full h-2 mt-2 overflow-hidden">
                 <div
-                  className={`h-full ${colors.bar} transition-all`}
-                  style={{ width: `${result.severityScore}%` }}
+                  className={`h-full ${colors.bar} rounded-full opacity-60`}
+                  style={{ width: `${result.confidence}%` }}
                 ></div>
               </div>
-            </div>
-
-            {/* Description */}
-            <div className="bg-white rounded-lg p-6 mb-8">
-              <h3 className="font-bold text-gray-900 mb-3">Tentang Hasil Anda</h3>
-              <p className="text-gray-700 leading-relaxed text-sm">
-                {description.description}
-              </p>
-            </div>
-
-            {/* Recommendations */}
-            <div className="bg-white rounded-lg p-6">
-              <h3 className="font-bold text-gray-900 mb-4">Rekomendasi</h3>
-              <ul className="space-y-3">
-                {description.recommendations.map((rec, index) => (
-                  <li key={index} className="flex gap-3 text-sm text-gray-700">
-                    <span className="inline-flex items-center justify-center w-6 h-6 rounded-full bg-red-900 text-white flex-shrink-0 text-xs font-bold">
-                      {index + 1}
-                    </span>
-                    <span className="pt-0.5">{rec}</span>
-                  </li>
-                ))}
-              </ul>
             </div>
           </div>
 
@@ -184,9 +188,9 @@ const cfPercent = (result.totalCF * 100).toFixed(2);
             </button>
             <button
               onClick={() => router.push('/')}
-              className="flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-2xl font-bold hover:shadow-lg hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95"
+              className="flex items-center justify-center gap-2 px-6 py-4  text-white rounded-2xl font-bold hover:shadow-lg hover:from-primary-700 hover:to-primary-800 transition-all transform hover:scale-105 active:scale-95 bg-maroon-800"
             >
-              <Home className="w-6 h-6" />
+              <Home className="w-6 h-6 " />
               Kembali ke Home
             </button>
           </div>

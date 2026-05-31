@@ -1,122 +1,163 @@
+export type SymptomAnswer = {
+  symptomId: number;
+  code: string;
+  userAnswer: boolean;
+  expertWeight: number;
+};
+
 export type CFResult = {
   totalCF: number;
-  severityLevel: 'Ringan' | 'Sedang' | 'Berat';
+  severityLevel: 'Normal' | 'Ringan' | 'Sedang' | 'Berat';
   severityScore: number;
   confidence: number;
 };
 
+const RULES = {
+  Ringan: ['A001', 'A002', 'A003', 'A004'],
+  Sedang: ['A005', 'A006', 'A007', 'A008'],
+  Berat: ['A009', 'A010', 'A011', 'A012'],
+};
+
+function combineCF(cfOld: number, cfNew: number): number {
+  return cfOld + cfNew * (1 - cfOld);
+}
+
+function calculateLevelCF(
+  answers: SymptomAnswer[],
+  codes: string[]
+): number {
+  const selectedSymptoms = answers
+    .filter(
+      (answer) =>
+        answer.userAnswer &&
+        codes.includes(answer.code)
+    )
+    .map((answer) => answer.expertWeight);
+
+  if (selectedSymptoms.length === 0) {
+    return 0;
+  }
+
+  let cf = selectedSymptoms[0];
+
+  for (let i = 1; i < selectedSymptoms.length; i++) {
+    cf = combineCF(cf, selectedSymptoms[i]);
+  }
+
+  return cf;
+}
+
 export function calculateCertaintyFactor(
-  answers: { expertWeight: number; userAnswer: boolean }[]
+  answers: SymptomAnswer[]
 ): CFResult {
 
-  const selectedCF = answers
-    .filter((item) => item.userAnswer)
-    .map((item) => item.expertWeight);
+  const ringanCF = calculateLevelCF(
+    answers,
+    RULES.Ringan
+  );
 
-  let combinedCF = 0;
+  const sedangCF = calculateLevelCF(
+    answers,
+    RULES.Sedang
+  );
 
-  if (selectedCF.length > 0) {
-    combinedCF = selectedCF[0];
+  const beratCF = calculateLevelCF(
+    answers,
+    RULES.Berat
+  );
 
-    for (let i = 1; i < selectedCF.length; i++) {
-      combinedCF =
-        combinedCF +
-        selectedCF[i] * (1 - combinedCF);
-    }
+  const results = [
+    {
+      level: 'Ringan' as const,
+      cf: ringanCF,
+    },
+    {
+      level: 'Sedang' as const,
+      cf: sedangCF,
+    },
+    {
+      level: 'Berat' as const,
+      cf: beratCF,
+    },
+  ];
+
+  const highestResult = results.reduce(
+    (prev, current) =>
+      current.cf > prev.cf ? current : prev
+  );
+
+  if (highestResult.cf === 0) {
+    return {
+      totalCF: 0,
+      severityLevel: 'Normal',
+      severityScore: 0,
+      confidence: 0,
+    };
   }
 
-  const emotionalSymptoms = answers
-    .slice(0, 3)
-    .filter((a) => a.userAnswer).length;
-
-  const physicalSymptoms = answers
-    .slice(1, 9)
-    .filter((a) => a.userAnswer).length;
-
-  const cognitiveSymptoms = answers
-    .slice(8, 12)
-    .filter((a) => a.userAnswer).length;
-
-  const emotionalWeight = emotionalSymptoms * 1;
-  const physicalWeight = physicalSymptoms * 2;
-  const cognitiveWeight = cognitiveSymptoms * 3;
-
-  const totalWeight =
-    emotionalWeight +
-    physicalWeight +
-    cognitiveWeight;
-
-  let severityLevel: 'Ringan' | 'Sedang' | 'Berat';
-  let severityScore: number;
-
-  if (totalWeight >= 20) {
-    severityLevel = 'Berat';
-  } else if (totalWeight >= 10) {
-    severityLevel = 'Sedang';
-  } else {
-    severityLevel = 'Ringan';
-  }
-
-  severityScore = Math.min(
-    100,
-    Math.round((totalWeight / 30) * 100)
+  const percentage = Number(
+    (highestResult.cf * 100).toFixed(2)
   );
 
   return {
-    totalCF: combinedCF,
-    severityLevel,
-    severityScore,
-    confidence: Math.round(combinedCF * 100),
+    totalCF: highestResult.cf,
+    severityLevel: highestResult.level,
+    severityScore: percentage,
+    confidence: percentage,
   };
 }
-export function getSeverityDescription(level: string): {
-  title: string;
-  description: string;
-  recommendations: string[];
-} {
+
+export function getSeverityDescription(level: string) {
   const descriptions = {
-    Ringan: {
-      title: 'Depresi Ringan (Mild Depression)',
+    Normal: {
+      title: 'Kondisi Normal',
       description:
-        'Anda menunjukkan gejala-gejala awal depresi yang masih dapat dikelola. Meskipun masih dapat beraktivitas, disarankan untuk lebih memperhatikan kesehatan mental Anda.',
+        'Tidak ditemukan gejala depresi yang signifikan.',
       recommendations: [
-        'Lakukan aktivitas fisik secara rutin (minimal 30 menit per hari)',
-        'Jaga pola tidur yang teratur',
-        'Cari dukungan dari teman atau keluarga',
-        'Pertimbangkan untuk berkonsultasi dengan profesional kesehatan mental',
-        'Praktikkan teknik relaksasi atau mindfulness',
+        'Tetap menjaga kesehatan mental.',
+        'Lakukan aktivitas positif secara rutin.',
+      ],
+    },
+
+    Ringan: {
+      title: 'Depresi Ringan',
+      description:
+        'Terdapat gejala emosional awal yang perlu diperhatikan.',
+      recommendations: [
+        'Istirahat yang cukup',
+        'Olahraga secara rutin',
+        'Kelola stres dengan baik',
+        'Bercerita kepada orang terpercaya',
       ],
     },
 
     Sedang: {
-      title: 'Depresi Sedang (Moderate Depression)',
+      title: 'Depresi Sedang',
       description:
-        'Anda menunjukkan gejala-gejala depresi yangc mulai mengganggu fungsi sosial dan akademik. Disarankan untuk segera mencari bantuan profesional.',
+        'Gejala mulai memengaruhi aktivitas sehari-hari.',
       recommendations: [
-        'Segera konsultasi dengan psikolog atau psikiater',
-        'Kurangi beban akademik jika memungkinkan',
-        'Tingkatkan interaksi sosial yang positif',
-        'Jaga kesehatan fisik dengan olahraga dan nutrisi baik',
-        'Hindari penggunaan alkohol atau zat terlarang',
+        'Konsultasi dengan konselor kampus',
+        'Perbaiki pola tidur',
+        'Kurangi tekanan akademik berlebih',
+        'Perlu dukungan sosial yang baik',
       ],
     },
 
     Berat: {
-      title: 'Depresi Berat (Severe Depression)',
+      title: 'Depresi Berat',
       description:
-        'Anda menunjukkan gejala-gejala depresi yang serius dan memerlukan penanganan medis atau psikologis segera. Segera hubungi profesional kesehatan.',
+        'Gejala yang muncul membutuhkan perhatian profesional.',
       recommendations: [
-        'Segera konsultasi dengan psikiater untuk evaluasi dan pengobatan',
-        'Pertimbangkan terapi obat-obatan jika direkomendasikan',
-        'Hubungi layanan kesehatan mental darurat jika ada pikiran untuk menyakiti diri',
-        'Beritahu keluarga atau teman terdekat tentang kondisi Anda',
-        'Tetap dalam komunikasi reguler dengan profesional kesehatan',
+        'Segera konsultasi ke psikolog',
+        'Pertimbangkan konsultasi psikiater',
+        'Hubungi keluarga atau teman dekat',
+        'Cari bantuan profesional sesegera mungkin',
       ],
     },
   };
 
   return (
-    descriptions[level as keyof typeof descriptions] ||
-    descriptions.Ringan
+    descriptions[level as keyof typeof descriptions] ??
+    descriptions.Normal
   );
 }

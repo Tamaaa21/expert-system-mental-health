@@ -1,6 +1,5 @@
 'use client';
 
-import { Shield } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -14,11 +13,9 @@ export function Navigation() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center gap-3 cursor-pointer">
-            <div className="w-8 h-8 bg-maroon-800 rounded-full flex items-center justify-center">
-              <Shield className="w-5 h-5 text-white" />
-            </div>
+            <img src="/logo-ml.png" alt="Logo" className="w-15 h-12" />
             <span className="font-bold text-maroon-800 hidden sm:inline text-sm">
-              UNIVERSITAS HARKAT NEGERI
+              MENTAL HEALTH <br></br>UNIVERSITAS HARKAT NEGERI
             </span>
           </Link>
 
