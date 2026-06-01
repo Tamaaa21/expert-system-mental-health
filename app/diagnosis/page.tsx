@@ -71,7 +71,7 @@ export default function DiagnosisPage() {
             semester,
             total_cf: result.totalCF,
             severity_level: result.severityLevel,
-            severity_score: result.severityScore,
+            severity_score: Math.round(result.severityScore),
           },
         ])
         .select()
