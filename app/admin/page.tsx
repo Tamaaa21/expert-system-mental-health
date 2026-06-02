@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { BarChart3, Users, TrendingUp, Loader } from 'lucide-react';
-import { Navigation } from '@/components/Navigation';
 import { Footer } from '@/components/Footer';
 import { useRouter } from 'next/navigation';
 
@@ -46,6 +45,26 @@ export default function AdminPage() {
     setAuthChecked(true);
     fetchStatistics();
   }, [router]);
+
+  const header = (
+    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 className="text-4xl font-bold text-gray-900">Admin Dashboard</h1>
+        <p className="text-gray-600 mt-2">
+          Statistik agregat diagnosis kesehatan mental mahasiswa
+        </p>
+      </div>
+      <button
+        onClick={() => {
+          localStorage.removeItem('adminAuth');
+          router.push('/admin/login');
+        }}
+        className="px-5 py-2 rounded-full border border-red-200 text-red-900 font-semibold hover:bg-red-50 transition-colors"
+      >
+        Keluar
+      </button>
+    </div>
+  );
 
   async function fetchStatistics() {
     try {
@@ -114,8 +133,8 @@ export default function AdminPage() {
   if (!authChecked || stats.loading) {
     return (
       <>
-        <Navigation />
-        <div className="min-h-screen bg-gray-50 pt-20 flex items-center justify-center">
+        {header}
+        <div className="min-h-screen bg-gray-50 pt-6 flex items-center justify-center">
           <div className="text-center">
             <Loader className="w-12 h-12 text-red-900 animate-spin mx-auto mb-4" />
             <p className="text-gray-600">Memuat statistik...</p>
@@ -128,28 +147,9 @@ export default function AdminPage() {
 
   return (
     <>
-      <Navigation />
-      <div className="min-h-screen bg-gray-50 pt-20 pb-12">
+      <div className="min-h-screen bg-gray-50 pt-6 pb-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <h1 className="text-4xl font-bold text-gray-900">
-                Admin Dashboard
-              </h1>
-              <p className="text-gray-600 mt-2">
-                Statistik agregat diagnosis kesehatan mental mahasiswa
-              </p>
-            </div>
-            <button
-              onClick={() => {
-                localStorage.removeItem('adminAuth');
-                router.push('/admin/login');
-              }}
-              className="px-5 py-2 rounded-full border border-red-200 text-red-900 font-semibold hover:bg-red-50 transition-colors"
-            >
-              Keluar
-            </button>
-          </div>
+          {header}
 
           {/* Summary Cards */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
