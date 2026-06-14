@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Script from 'next/script';
 
 export function Footer() {
   return (
@@ -78,6 +79,29 @@ export function Footer() {
           <p className="text-gray-100 text-sm">
             © 2026 Universitas Harkat Negeri. Hak Cipta Dilindungi.
           </p>
+
+
+  <div className="mt-4 flex justify-center">
+    <div id="histats_counter"></div>
+  </div>
+
+
+<Script id="histats" strategy="afterInteractive">
+  {`
+    var _Hasync = _Hasync || [];
+    _Hasync.push(['Histats.start', '1,5032900,4,30,130,80,00011001']);
+    _Hasync.push(['Histats.fasi', '1']);
+    _Hasync.push(['Histats.track_hits', '']);
+
+    (function() {
+      var hs = document.createElement('script');
+      hs.type = 'text/javascript';
+      hs.async = true;
+      hs.src = '//s10.histats.com/js15_as.js';
+      document.body.appendChild(hs);
+    })();
+  `}
+</Script>
         </div>
       </div>
     </footer>
