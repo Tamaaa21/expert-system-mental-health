@@ -101,10 +101,7 @@ a {
   transition: color 0.3s ease;
 }
 
-a:hover {
-  color: var(--color-maroon);
-  text-decoration: underline;
-}
+
 
 /* ===========================
    Buttons
@@ -127,21 +124,9 @@ a:hover {
   color: var(--color-white);
 }
 
-.btn-primary:hover {
-  background-color: var(--color-maroon-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(128, 0, 0, 0.3);
-}
-
 .btn-secondary {
   background-color: var(--color-red-primary);
   color: var(--color-white);
-}
-
-.btn-secondary:hover {
-  background-color: var(--color-red-bright);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(196, 30, 58, 0.3);
 }
 
 .btn-outline {
@@ -150,20 +135,10 @@ a:hover {
   border: 2px solid var(--color-maroon);
 }
 
-.btn-outline:hover {
-  background-color: var(--color-maroon);
-  color: var(--color-white);
-}
-
 .btn-light {
   background-color: var(--color-off-white);
   color: var(--color-maroon);
   border: 1px solid var(--color-light-gray);
-}
-
-.btn-light:hover {
-  background-color: var(--color-light-gray);
-  border-color: var(--color-maroon);
 }
 
 .btn:disabled {
