@@ -9,47 +9,47 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div>
-            <h4 className="font-bold text-lg mb-4">Navigasi</h4>
+            <h4 className="font-bold text-lg mb-4  text-gray-100">Navigasi</h4>
             <ul className="space-y-2 text-gray-100 text-sm">
               <li>
-                <Link href="/" className="text-white transition-colors">
+                <Link href="/" className="text-white">
                   Home
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="text-white transition-colors">
+                <Link href="/about" className="text-white ">
                   About
                 </Link>
               </li>
               <li>
-                <Link href="/informasi" className="text-white transition-colors">
+                <Link href="/informasi" className="text-white ">
                   Informasi
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-4">Layanan</h4>
+            <h4 className="font-bold text-lg mb-4  text-gray-100">Layanan</h4>
             <ul className="space-y-2 text-gray-100 text-sm">
               <li>
-                <Link href="/diagnosis" className="text-white transition-colors">
+                <Link href="/diagnosis" className="text-white ">
                   Diagnosis Mental
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-white transition-colors">
+                <a href="#" className="text-white">
                   FAQ
                 </a>
               </li>
               <li>
-                <a href="#" className="text-white transition-colors">
+                <a href="#" className="text-white ">
                   Kebijakan Privasi
                 </a>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-4">Hubungi Kami</h4>
+            <h4 className="font-bold text-lg mb-4  text-gray-100">Hubungi Kami</h4>
             <ul className="space-y-2 text-gray-100 text-sm">
               <li>Phone: (0274) 1234-5678</li>
               <li>Email: support@uhn.ac.id</li>
@@ -57,22 +57,13 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-4">Ikuti Kami</h4>
+            <h4 className="font-bold text-lg mb-4  text-gray-100">HIstats</h4>
             <div className="flex gap-4">
-              <a href="#" className="text-gray-200 transition-colors">
-                Facebook
-              </a>
-              <a href="#" className="text-gray-200 transition-colors">
-                Instagram
-              </a>
-              <a href="#" className="text-gray-200 transition-colors">
-                Twitter
-              </a>
+          
+    <div id="histats_counter"></div>
             </div>
           </div>
-            <div className="mt-4 flex justify-center">
-    <div id="histats_counter"></div>
-  </div>
+   
         </div>
 
         <div className="border-t border-maroon-700 pt-8 text-center">
