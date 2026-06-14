@@ -70,6 +70,9 @@ export function Footer() {
               </a>
             </div>
           </div>
+            <div className="mt-4 flex justify-center">
+    <div id="histats_counter"></div>
+  </div>
         </div>
 
         <div className="border-t border-maroon-700 pt-8 text-center">
@@ -81,15 +84,13 @@ export function Footer() {
           </p>
 
 
-  <div className="mt-4 flex justify-center">
-    <div id="histats_counter"></div>
-  </div>
+
 
 
 <Script id="histats" strategy="afterInteractive">
   {`
     var _Hasync = _Hasync || [];
-    _Hasync.push(['Histats.start', '1,5032900,4,30,130,80,00011001']);
+    _Hasync.push(['Histats.start', '1,5032900,4,430,112,75,00011111']);
     _Hasync.push(['Histats.fasi', '1']);
     _Hasync.push(['Histats.track_hits', '']);
 
